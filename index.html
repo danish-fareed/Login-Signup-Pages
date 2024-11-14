@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(120deg, #7f7fd5, #86a8e7, #91eae4);
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-container {
+            position: relative;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #666;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #86a8e7;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background: #86a8e7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #7f7fd5;
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .toggle-form a {
+            color: #86a8e7;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .toggle-form a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: #ff4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        #signupForm {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="loginForm" class="form-container">
+            <h2>Login</h2>
+            <div class="input-group">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" required>
+                <div class="error" id="loginEmailError"></div>
+            </div>
+            <div class="input-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" required>
+                <div class="error" id="loginPasswordError"></div>
+            </div>
+            <button type="submit">Login</button>
+            <div class="toggle-form">
+                <span>Don't have an account? </span>
+                <a onclick="toggleForms()">Sign up</a>
+            </div>
+        </form>
+
+        <form id="signupForm" class="form-container">
+            <h2>Sign Up</h2>
+            <div class="input-group">
+                <label for="signupName">Full Name</label>
+                <input type="text" id="signupName" required>
+                <div class="error" id="signupNameError"></div>
+            </div>
+            <div class="input-group">
+                <label for="signupEmail">Email</label>
+                <input type="email" id="signupEmail" required>
+                <div class="error" id="signupEmailError"></div>
+            </div>
+            <div class="input-group">
+                <label for="signupPassword">Password</label>
+                <input type="password" id="signupPassword" required>
+                <div class="error" id="signupPasswordError"></div>
+            </div>
+            <div class="input-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" required>
+                <div class="error" id="confirmPasswordError"></div>
+            </div>
+            <button type="submit">Sign Up</button>
+            <div class="toggle-form">
+                <span>Already have an account? </span>
+                <a onclick="toggleForms()">Login</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function toggleForms() {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+            }
+            clearErrors();
+            clearForms();
+        }
+
+        function clearErrors() {
+            const errorElements = document.querySelectorAll('.error');
+            errorElements.forEach(element => {
+                element.textContent = '';
+            });
+        }
+
+        function clearForms() {
+            document.getElementById('loginForm').reset();
+            document.getElementById('signupForm').reset();
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validatePassword(password) {
+            return password.length >= 8;
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            clearErrors();
+
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            let isValid = true;
+
+            if (!validateEmail(email)) {
+                document.getElementById('loginEmailError').textContent = 'Please enter a valid email address';
+                isValid = false;
+            }
+
+            if (!validatePassword(password)) {
+                document.getElementById('loginPasswordError').textContent = 'Password must be at least 8 characters long';
+                isValid = false;
+            }
+
+            if (isValid) {
+                // Here you would typically send the data to your server
+                console.log('Login successful!', { email });
+                alert('Login successful!');
+            }
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            clearErrors();
+
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            let isValid = true;
+
+            if (name.length < 2) {
+                document.getElementById('signupNameError').textContent = 'Name must be at least 2 characters long';
+                isValid = false;
+            }
+
+            if (!validateEmail(email)) {
+                document.getElementById('signupEmailError').textContent = 'Please enter a valid email address';
+                isValid = false;
+            }
+
+            if (!validatePassword(password)) {
+                document.getElementById('signupPasswordError').textContent = 'Password must be at least 8 characters long';
+                isValid = false;
+            }
+
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+                isValid = false;
+            }
+
+            if (isValid) {
+                // Here you would typically send the data to your server
+                console.log('Signup successful!', { name, email });
+                alert('Signup successful!');
+            }
+        });
+    </script>
+</body>
+</html>
